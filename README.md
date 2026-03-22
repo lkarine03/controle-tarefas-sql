@@ -1,30 +1,27 @@
 # Sistema de Controle de Tarefas
 
-Sistema desenvolvido para gerenciamento de tarefas com foco em organização e produtividade.
+Sistema completo para gerenciamento de tarefas com integração entre frontend, backend e banco de dados.
 
 ## Objetivo
-Criar uma aplicação capaz de cadastrar, visualizar e gerenciar tarefas utilizando banco de dados.
+Permitir o cadastro e controle de tarefas utilizando uma aplicação conectada a banco de dados.
 
 ## Funcionalidades
-- Cadastro de tarefas
-- Listagem de tarefas
-- Atualização de status (pendente/concluído)
-- Remoção de tarefas
+- Criar tarefas
+- Listar tarefas
+- Atualizar status
+- Deletar tarefas
 
-## Tecnologias utilizadas
-- Python (backend)
-- SQL / MySQL (armazenamento de dados)
-- HTML, CSS e JavaScript (interface)
+## Tecnologias
+- Python (Flask)
+- MySQL
+- HTML, CSS, JavaScript
 
-## Destaque técnico
-- Implementação de operações CRUD com banco de dados
-- Modelagem de dados para gerenciamento de tarefas
-- Integração entre aplicação e banco SQL
+##  Destaque técnico
+- Desenvolvimento de API REST
+- Integração entre frontend e backend
+- Operações CRUD com banco de dados
 
 ## Como executar
-1. Clone o repositório
-2. Configure o banco de dados
-3. Execute o sistema
-
-## Observação
-Projeto voltado para prática de desenvolvimento de sistemas com integração a banco de dados.
+1. Criar banco com `database.sql`
+2. Rodar o backend (`app.py`)
+3. Abrir o frontend
