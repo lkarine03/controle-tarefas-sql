@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Controle de Tarefas</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="container">
+    <h1>Controle de Tarefas</h1>
+
+    <div class="form">
+        <input id="titulo" placeholder="Título">
+        <input id="descricao" placeholder="Descrição">
+
+        <select id="prioridade">
+            <option value="baixa">Baixa</option>
+            <option value="media">Média</option>
+            <option value="alta">Alta</option>
+        </select>
+
+        <button onclick="adicionar()">Adicionar</button>
+    </div>
+
+    <ul id="lista"></ul>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
