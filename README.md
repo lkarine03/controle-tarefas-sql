@@ -39,6 +39,7 @@ Permitir o cadastro, visualização e controle de tarefas por meio de uma aplica
 4. Acessar no navegador:
 
    * http://127.0.0.1:5000/tarefas
+     Obs: A API foi executada localmente, gerando o seguinte endereço
 
 ## Demonstração
 
