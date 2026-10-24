@@ -94,3 +94,83 @@ def criar():
         return jsonify({"erro": "Prioridade inválida."}), 400
 
     # O banco permite NULL. Não exigimos um usuário inexistente de ID 1.
+    usuario_id = dados.get("usuario_id")
+    if usuario_id is not None and (
+        isinstance(usuario_id, bool)
+        or not isinstance(usuario_id, int)
+        or usuario_id <= 0
+    ):
+        return jsonify({"erro": "usuario_id deve ser um inteiro positivo."}), 400
+
+    conexao = obter_conexao()
+    cursor = conexao.cursor()
+    try:
+        cursor.execute(
+            """
+            INSERT INTO tarefas (titulo, descricao, prioridade, usuario_id)
+            VALUES (%s, %s, %s, %s)
+            """,
+            (titulo, descricao, prioridade, usuario_id),
+        )
+        tarefa_id = cursor.lastrowid
+        conexao.commit()
+    except mysql.connector.IntegrityError:
+        conexao.rollback()
+        return jsonify({"erro": "O usuário informado não existe no banco."}), 400
+    except mysql.connector.Error:
+        conexao.rollback()
+        raise
+    finally:
+        cursor.close()
+
+    return jsonify({"msg": "Tarefa criada", "id": tarefa_id}), 201
+
+
+@app.put("/tarefas/<int:id>")
+def atualizar(id):
+    conexao = obter_conexao()
+    cursor = conexao.cursor()
+    try:
+        cursor.execute(
+            """
+            UPDATE tarefas
+            SET status = 'concluido', data_conclusao = NOW()
+            WHERE id = %s
+            """,
+            (id,),
+        )
+        alteradas = cursor.rowcount
+        conexao.commit()
+    except mysql.connector.Error:
+        conexao.rollback()
+        raise
+    finally:
+        cursor.close()
+
+    if alteradas == 0:
+        return jsonify({"erro": "Tarefa não encontrada."}), 404
+    return jsonify({"msg": "Tarefa concluída"}), 200
+
+
+@app.delete("/tarefas/<int:id>")
+def deletar(id):
+    conexao = obter_conexao()
+    cursor = conexao.cursor()
+    try:
+        cursor.execute("DELETE FROM tarefas WHERE id = %s", (id,))
+        removidas = cursor.rowcount
+        conexao.commit()
+    except mysql.connector.Error:
+        conexao.rollback()
+        raise
+    finally:
+        cursor.close()
+
+    if removidas == 0:
+        return jsonify({"erro": "Tarefa não encontrada."}), 404
+    return jsonify({"msg": "Tarefa removida"}), 200
+
+
+if __name__ == "__main__":
+    # Habilite debug somente no ambiente de desenvolvimento local.
+    app.run(host="127.0.0.1", port=5000, debug=os.getenv("FLASK_DEBUG") == "1")

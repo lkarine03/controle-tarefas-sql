@@ -1,47 +1,119 @@
-const api = "http://127.0.0.1:5000/tarefas";
+// A interface é servida pelo mesmo Flask que fornece a API.
+// Assim, não dependemos de um endereço localhost fixo no navegador.
+const api = "/tarefas";
+const lista = document.getElementById("lista");
+const mensagem = document.getElementById("mensagem");
+const campoTitulo = document.getElementById("titulo");
+const campoDescricao = document.getElementById("descricao");
+const campoPrioridade = document.getElementById("prioridade");
+
+function avisar(texto, erro = false) {
+    mensagem.textContent = texto;
+    mensagem.style.color = erro ? "#b42318" : "#166534";
+}
+
+async function requisitar(url, opcoes = {}) {
+    let resposta;
+    try {
+        resposta = await fetch(url, opcoes);
+    } catch (erro) {
+        throw new Error("Não foi possível conectar ao servidor. Abra o sistema pelo Flask.");
+    }
+
+    const tipo = resposta.headers.get("content-type") || "";
+    const dados = tipo.includes("application/json") ? await resposta.json() : null;
+    if (!resposta.ok) {
+        throw new Error(dados?.erro || `Erro na requisição (${resposta.status}).`);
+    }
+    return dados;
+}
 
 async function carregar() {
-    const res = await fetch(api);
-    const dados = await res.json();
+    try {
+        const tarefas = await requisitar(api);
+        lista.replaceChildren();
 
-    const lista = document.getElementById("lista");
-    lista.innerHTML = "";
+        if (!tarefas.length) {
+            const vazio = document.createElement("li");
+            vazio.textContent = "Nenhuma tarefa cadastrada.";
+            lista.appendChild(vazio);
+            return;
+        }
 
-    dados.forEach(t => {
-        const li = document.createElement("li");
+        for (const tarefa of tarefas) {
+            const item = document.createElement("li");
+            const resumo = document.createElement("strong");
+            resumo.textContent = tarefa.titulo;
+            item.appendChild(resumo);
+            item.appendChild(document.createTextNode(
+                ` - ${tarefa.prioridade} - ${tarefa.status} `
+            ));
 
-        li.innerHTML = `
-            <strong>${t.titulo}</strong> - ${t.prioridade} - ${t.status}
-            <button onclick="concluir(${t.id})">✔</button>
-            <button onclick="remover(${t.id})">X</button>
-        `;
+            const concluirBotao = document.createElement("button");
+            concluirBotao.type = "button";
+            concluirBotao.textContent = "Concluir";
+            concluirBotao.disabled = tarefa.status === "concluido";
+            concluirBotao.addEventListener("click", () => concluir(tarefa.id));
 
-        lista.appendChild(li);
-    });
+            const removerBotao = document.createElement("button");
+            removerBotao.type = "button";
+            removerBotao.textContent = "Excluir";
+            removerBotao.addEventListener("click", () => remover(tarefa.id));
+
+            item.append(concluirBotao, removerBotao);
+            lista.appendChild(item);
+        }
+    } catch (erro) {
+        lista.replaceChildren();
+        avisar(erro.message, true);
+    }
 }
 
 async function adicionar() {
-    const titulo = document.getElementById("titulo").value;
-    const descricao = document.getElementById("descricao").value;
-    const prioridade = document.getElementById("prioridade").value;
+    const titulo = campoTitulo.value.trim();
+    const descricao = campoDescricao.value.trim();
+    const prioridade = campoPrioridade.value;
 
-    await fetch(api, {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({titulo, descricao, prioridade})
-    });
+    if (!titulo) {
+        avisar("Informe o título da tarefa.", true);
+        campoTitulo.focus();
+        return;
+    }
 
-    carregar();
+    try {
+        await requisitar(api, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ titulo, descricao, prioridade })
+        });
+        campoTitulo.value = "";
+        campoDescricao.value = "";
+        campoPrioridade.value = "media";
+        avisar("Tarefa adicionada com sucesso.");
+        await carregar();
+    } catch (erro) {
+        avisar(erro.message, true);
+    }
 }
 
 async function concluir(id) {
-    await fetch(api + "/" + id, {method: "PUT"});
-    carregar();
+    try {
+        await requisitar(`${api}/${id}`, { method: "PUT" });
+        avisar("Tarefa concluída.");
+        await carregar();
+    } catch (erro) {
+        avisar(erro.message, true);
+    }
 }
 
 async function remover(id) {
-    await fetch(api + "/" + id, {method: "DELETE"});
-    carregar();
+    try {
+        await requisitar(`${api}/${id}`, { method: "DELETE" });
+        avisar("Tarefa excluída.");
+        await carregar();
+    } catch (erro) {
+        avisar(erro.message, true);
+    }
 }
 
 carregar();

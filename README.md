@@ -1,119 +1,69 @@
-
 # Sistema de Controle de Tarefas
 
-Este projeto foi desenvolvido com o objetivo de colocar em prática meus conhecimentos em **banco de dados, operações CRUD e integração entre frontend e backend**.
+Este é um projeto simples de estudos, criado para colocar em prática meus conhecimentos em **banco de dados, operações CRUD e integração entre frontend e backend**.
 
-A aplicação consiste em um sistema simples de gerenciamento de tarefas, permitindo cadastrar, visualizar, concluir e excluir registros.
-
-Durante o desenvolvimento, pratiquei consultas SQL, integração com MySQL, criação de rotas utilizando Python e Flask e construção de uma interface com HTML, CSS e JavaScript.
+A aplicação permite cadastrar, visualizar, marcar como concluídas e excluir tarefas, utilizando Python, Flask e MySQL, com uma interface em HTML, CSS e JavaScript.
 
 ## Funcionalidades
 
 - Cadastrar tarefas com título, descrição e prioridade
-- Visualizar as tarefas cadastradas
+- Visualizar tarefas cadastradas
 - Marcar tarefas como concluídas
 - Excluir tarefas
-- Armazenar os registros em um banco de dados MySQL
+- Armazenar os dados no MySQL
+- Exibir mensagens de sucesso ou erro na interface
 
-## Tecnologias utilizadas
+## Tecnologias
 
-- **Python:** desenvolvimento do backend
-- **Flask:** criação das rotas e da API
-- **MySQL:** armazenamento e gerenciamento dos dados
-- **HTML:** estrutura da interface
-- **CSS:** estilização
-- **JavaScript:** interação com a aplicação
-
-## Estrutura do projeto
-
-```text
-controle-tarefas-sql/
-├── app.py
-├── database.sql
-├── index.html
-├── script.js
-├── style.css
-└── README.md
-```
+- Python e Flask
+- MySQL
+- HTML, CSS e JavaScript
 
 ## Como executar
 
-### 1. Preparar o ambiente
+1. Instale Python e MySQL e inicie o servidor MySQL.
+2. Execute `database.sql` para criar o banco `tarefas_db` e suas tabelas.
+3. Instale as dependências:
 
-Para executar o projeto localmente, é necessário ter Python e MySQL instalados.
+   ```bash
+   python -m pip install flask mysql-connector-python python-dotenv
+   ```
 
-### 2. Instalar as dependências
+4. Configure as variáveis de ambiente do MySQL. Você pode criar um arquivo `.env` **somente no seu computador** (não o publique no GitHub):
 
-No terminal, execute:
+   ```env
+   DB_HOST=localhost
+   DB_NAME=tarefas_db
+   DB_USER=seu_usuario
+   DB_PASSWORD=sua_senha
+   FLASK_DEBUG=0
+   ```
 
-```bash
-pip install flask mysql-connector-python python-dotenv
-```
+   O usuário precisa ter permissões de leitura e escrita no banco. O cadastro de tarefas não exige usuário associado.
 
-### 3. Configurar o banco de dados
+5. Inicie o servidor:
 
-Execute o arquivo `database.sql` no MySQL para criar o banco `tarefas_db` e as tabelas necessárias.
+   ```bash
+   python app.py
+   ```
 
-O banco possui duas tabelas:
+6. Abra a **interface** em [http://127.0.0.1:5000/](http://127.0.0.1:5000/).
 
-- `usuarios`: armazena informações dos usuários.
-- `tarefas`: armazena os registros das tarefas e seus respectivos status.
+A rota [http://127.0.0.1:5000/tarefas](http://127.0.0.1:5000/tarefas) retorna os registros em JSON, não a interface visual.
 
-### 4. Configurar a conexão
+> **Importante:** não abra o `index.html` diretamente pelo Explorador de Arquivos nem pelo GitHub Pages. Neste projeto, a interface deve ser acessada pelo servidor Flask para se comunicar com a API no mesmo endereço.
 
-Crie um arquivo `.env` na pasta do projeto com as informações de conexão do seu MySQL:
+## Rotas da API
 
-```env
-DB_HOST=localhost
-DB_NAME=tarefas_db
-DB_USER=seu_usuario
-DB_PASSWORD=sua_senha
-```
-
-Substitua os valores pelas configurações do seu ambiente.
-
-**Importante:** o arquivo `.env` contém informações locais de acesso ao banco e não deve ser publicado no GitHub.
-
-### 5. Executar a aplicação
-
-No terminal, execute:
-
-```bash
-python app.py
-```
-
-Com o servidor iniciado, acesse:
-
-**Interface da aplicação:**
-
-http://127.0.0.1:5000/
-
-**API de tarefas:**
-
-http://127.0.0.1:5000/tarefas
-
-## Operações CRUD
-
-O projeto utiliza operações básicas de gerenciamento de dados:
-
-| Operação | Método HTTP | Funcionalidade |
-|----------|-------------|----------------|
-| Create | POST | Cadastrar tarefas |
-| Read | GET | Listar tarefas |
-| Update | PUT | Marcar tarefas como concluídas |
-| Delete | DELETE | Excluir tarefas |
-
-As operações são realizadas por meio da API Flask, com os dados armazenados no MySQL.
+| Método | Rota | Operação |
+| --- | --- | --- |
+| `GET` | `/tarefas` | Listar tarefas |
+| `POST` | `/tarefas` | Cadastrar tarefa |
+| `PUT` | `/tarefas/<id>` | Concluir tarefa |
+| `DELETE` | `/tarefas/<id>` | Excluir tarefa |
 
 ## Aprendizados
 
-O desenvolvimento deste projeto permitiu praticar:
+O projeto foi desenvolvido para praticar criação de tabelas relacionadas, consultas SQL, operações CRUD, rotas HTTP e comunicação entre frontend, backend e banco de dados.
 
-- Criação e relacionamento de tabelas em banco de dados relacional
-- Consultas e manipulação de dados utilizando SQL
-- Implementação de operações CRUD
-- Desenvolvimento de rotas com Flask
-- Integração entre frontend, backend e banco de dados
-- Utilização de requisições HTTP e dados em formato JSON
-
-Este é um projeto de estudos, desenvolvido para consolidar conhecimentos fundamentais de desenvolvimento web e banco de dados.
+A aplicação foi pensada para estudos e execução local. Não possui autenticação e não deve ser publicada como serviço aberto na internet sem medidas adicionais de segurança.

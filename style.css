@@ -28,3 +28,11 @@ li {
     padding: 10px;
     border-radius: 5px;
 }
+
+#mensagem {
+    min-height: 1.25em;
+}
+
+li button {
+    margin-left: 8px;
+}
