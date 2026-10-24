@@ -1,42 +1,28 @@
 
 # Sistema de Controle de Tarefas
 
-Aplicação web desenvolvida para gerenciamento de tarefas, utilizando Python, Flask e MySQL no backend, com interface em HTML, CSS e JavaScript.
+Este projeto foi desenvolvido com o objetivo de colocar em prática meus conhecimentos em **banco de dados, operações CRUD e integração entre frontend e backend**.
 
-O projeto foi criado para praticar o desenvolvimento de APIs REST, a integração entre frontend e backend e a persistência de informações em um banco de dados relacional.
+A aplicação consiste em um sistema simples de gerenciamento de tarefas, permitindo cadastrar, visualizar, concluir e excluir registros.
 
-## Sobre o projeto
-
-O sistema permite cadastrar, visualizar, concluir e excluir tarefas por meio de uma interface web conectada a uma API Flask.
-
-As informações são armazenadas em um banco de dados MySQL, permitindo a persistência das tarefas cadastradas.
+Durante o desenvolvimento, pratiquei consultas SQL, integração com MySQL, criação de rotas utilizando Python e Flask e construção de uma interface com HTML, CSS e JavaScript.
 
 ## Funcionalidades
 
 - Cadastrar tarefas com título, descrição e prioridade
-- Listar tarefas cadastradas
+- Visualizar as tarefas cadastradas
 - Marcar tarefas como concluídas
-- Registrar a data de conclusão
 - Excluir tarefas
-- Armazenar informações em banco de dados relacional
-- Validar os dados enviados à API
+- Armazenar os registros em um banco de dados MySQL
 
 ## Tecnologias utilizadas
 
-**Backend**
-- Python
-- Flask
-- MySQL
-- MySQL Connector/Python
-
-**Frontend**
-- HTML
-- CSS
-- JavaScript
-
-**Outras ferramentas**
-- Git e GitHub
-- Variáveis de ambiente para configuração do banco de dados
+- **Python:** desenvolvimento do backend
+- **Flask:** criação das rotas e da API
+- **MySQL:** armazenamento e gerenciamento dos dados
+- **HTML:** estrutura da interface
+- **CSS:** estilização
+- **JavaScript:** interação com a aplicação
 
 ## Estrutura do projeto
 
@@ -45,102 +31,50 @@ controle-tarefas-sql/
 ├── app.py
 ├── database.sql
 ├── index.html
-├── style.css
 ├── script.js
-├── requirements.txt
-├── .env.example
-├── .gitignore
+├── style.css
 └── README.md
 ```
 
-O arquivo `app.py` contém a API Flask e disponibiliza os arquivos da interface web. O arquivo `database.sql` contém a estrutura das tabelas utilizadas pela aplicação.
+## Como executar
 
-## Como executar o projeto
+### 1. Preparar o ambiente
 
-### 1. Requisitos
+Para executar o projeto localmente, é necessário ter Python e MySQL instalados.
 
-Para executar o projeto localmente, é necessário ter instalado:
+### 2. Instalar as dependências
 
-- Python
-- MySQL
-- Git (opcional, para clonar o repositório)
-
-### 2. Obter o projeto
-
-Clone o repositório:
+No terminal, execute:
 
 ```bash
-git clone https://github.com/lkarine03/controle-tarefas-sql.git
+pip install flask mysql-connector-python python-dotenv
 ```
 
-Entre na pasta:
+### 3. Configurar o banco de dados
 
-```bash
-cd controle-tarefas-sql
-```
+Execute o arquivo `database.sql` no MySQL para criar o banco `tarefas_db` e as tabelas necessárias.
 
-Também é possível baixar o projeto diretamente pelo GitHub.
+O banco possui duas tabelas:
 
-### 3. Instalar as dependências
+- `usuarios`: armazena informações dos usuários.
+- `tarefas`: armazena os registros das tarefas e seus respectivos status.
 
-Execute:
+### 4. Configurar a conexão
 
-```bash
-pip install -r requirements.txt
-```
-
-As dependências utilizadas são:
-
-- Flask
-- mysql-connector-python
-- python-dotenv
-
-### 4. Configurar o banco de dados
-
-Inicie o servidor MySQL e execute o arquivo `database.sql` para criar o banco `tarefas_db` e as tabelas necessárias.
-
-O banco utiliza duas tabelas:
-
-**usuarios**
-- id
-- nome
-- email
-
-**tarefas**
-- id
-- titulo
-- descricao
-- prioridade
-- status
-- data_criacao
-- data_conclusao
-- usuario_id
-
-A tabela `tarefas` possui uma chave estrangeira para a tabela `usuarios`.
-
-O cadastro de tarefas não exige um usuário associado. Caso seja informado um `usuario_id`, ele deverá corresponder a um usuário existente.
-
-### 5. Configurar as variáveis de ambiente
-
-Crie um arquivo chamado `.env` na pasta principal do projeto, utilizando o `.env.example` como referência.
-
-Exemplo:
+Crie um arquivo `.env` na pasta do projeto com as informações de conexão do seu MySQL:
 
 ```env
 DB_HOST=localhost
 DB_NAME=tarefas_db
 DB_USER=seu_usuario
 DB_PASSWORD=sua_senha
-FLASK_DEBUG=0
 ```
 
-Substitua os valores pelas configurações do seu MySQL.
+Substitua os valores pelas configurações do seu ambiente.
 
-O usuário informado precisa ter permissão para consultar, inserir, atualizar e excluir registros nas tabelas do projeto.
+**Importante:** o arquivo `.env` contém informações locais de acesso ao banco e não deve ser publicado no GitHub.
 
-**Importante:** o arquivo `.env` contém configurações locais e não deve ser enviado ao GitHub.
-
-### 6. Executar a aplicação
+### 5. Executar a aplicação
 
 No terminal, execute:
 
@@ -150,7 +84,7 @@ python app.py
 
 Com o servidor iniciado, acesse:
 
-**Interface web:**
+**Interface da aplicação:**
 
 http://127.0.0.1:5000/
 
@@ -158,83 +92,28 @@ http://127.0.0.1:5000/
 
 http://127.0.0.1:5000/tarefas
 
-O endereço da API retorna as tarefas em formato JSON.
+## Operações CRUD
 
-## Rotas da API
+O projeto utiliza operações básicas de gerenciamento de dados:
 
-| Método | Rota | Descrição |
-|--------|------|-----------|
-| GET | `/tarefas` | Lista as tarefas cadastradas |
-| POST | `/tarefas` | Cadastra uma nova tarefa |
-| PUT | `/tarefas/<id>` | Marca uma tarefa como concluída |
-| DELETE | `/tarefas/<id>` | Exclui uma tarefa |
+| Operação | Método HTTP | Funcionalidade |
+|----------|-------------|----------------|
+| Create | POST | Cadastrar tarefas |
+| Read | GET | Listar tarefas |
+| Update | PUT | Marcar tarefas como concluídas |
+| Delete | DELETE | Excluir tarefas |
 
-### Exemplo de cadastro
-
-Requisição:
-
-```http
-POST /tarefas
-Content-Type: application/json
-```
-
-Corpo da requisição:
-
-```json
-{
-  "titulo": "Estudar Python",
-  "descricao": "Revisar conceitos de Flask",
-  "prioridade": "alta"
-}
-```
-
-Exemplo de resposta:
-
-```json
-{
-  "msg": "Tarefa criada",
-  "id": 1
-}
-```
-
-O identificador retornado é gerado pelo banco de dados.
-
-### Conclusão de tarefas
-
-Ao utilizar a rota `PUT /tarefas/<id>`, a aplicação altera o status da tarefa para `concluido` e registra sua data de conclusão.
-
-### Exclusão de tarefas
-
-A rota `DELETE /tarefas/<id>` remove a tarefa correspondente do banco de dados.
-
-Quando uma tarefa não é encontrada nas operações de atualização ou exclusão, a API retorna o código HTTP `404`.
-
-## Organização e boas práticas
-
-A aplicação utiliza:
-
-- Consultas SQL parametrizadas
-- Validação de informações recebidas pela API
-- Tratamento de erros de banco de dados
-- Gerenciamento de conexões com o MySQL
-- Configurações de acesso por variáveis de ambiente
-- Códigos de resposta HTTP apropriados
-
-O projeto foi desenvolvido para fins de estudo e execução em ambiente local. Não possui autenticação de usuários e não está preparado para exposição pública sem controles adicionais de segurança.
-
-## Demonstração
-
-As capturas de tela da interface e do funcionamento da aplicação serão adicionadas ao repositório.
+As operações são realizadas por meio da API Flask, com os dados armazenados no MySQL.
 
 ## Aprendizados
 
-O desenvolvimento deste projeto permitiu praticar conceitos de:
+O desenvolvimento deste projeto permitiu praticar:
 
-- Desenvolvimento de APIs REST com Flask
-- Integração entre frontend e backend
-- Operações CRUD
-- Modelagem e consultas em banco de dados relacional
-- Requisições HTTP e manipulação de JSON
-- Organização de código e tratamento de erros
-- Configuração de aplicações com variáveis de ambiente
+- Criação e relacionamento de tabelas em banco de dados relacional
+- Consultas e manipulação de dados utilizando SQL
+- Implementação de operações CRUD
+- Desenvolvimento de rotas com Flask
+- Integração entre frontend, backend e banco de dados
+- Utilização de requisições HTTP e dados em formato JSON
 
+Este é um projeto de estudos, desenvolvido para consolidar conhecimentos fundamentais de desenvolvimento web e banco de dados.
